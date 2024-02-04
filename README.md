@@ -6,3 +6,8 @@ This App contains features like :
 2) An Article Game to help you to practice genders of different German Nouns
 3) An Article Finder which allows you to find the genders of common German Nouns
 4) This App also has a learn sections which contains some learning material
+
+I have uploaded this app on playstore
+Here is the link for it:
+
+https://play.google.com/store/apps/details?id=org.tanishqborkar.myapp&pcampaignid=web_share
