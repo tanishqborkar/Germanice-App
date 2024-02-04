@@ -1,0 +1,520 @@
+#: import FadeTransition kivy.uix.screenmanager.FadeTransition
+
+ScreenManager:
+    id: scr_manager
+    transition:FadeTransition(duration = 0.5)
+    MenuScreen:
+    GenderScreen:
+    GenderGameScreen:
+    TranslatorScreen:
+    TryAgainScreen:
+    NotesScreen:
+    PersonalPronouns:
+    VerbForms:
+    NounArticle
+    Preposition:
+
+
+    
+
+
+<MenuScreen>:
+    name: 'menu'
+    NavigationLayout:
+        ScreenManager:
+            Screen:
+                Button:
+                    markup:True
+                    text:"GermaNice"
+                    font_name:'thin'
+                    pos_hint:{'center_x': 0.5 , 'center_y': 0.9}
+                    size_hint:(1,.2)
+                    background_normal:'kv files/5th.png'
+                    background_down:'kv files/5th.png'
+                    font_size: '60dp'
+                    bold:True
+
+
+                Button:
+                    markup:True
+                    text: "[b]Article Game[/b]"
+                    pos_hint:{'center_x': 0.5 , 'center_y': 0.5}
+                    size_hint:(1.0,0.2)
+                    on_release:app.root.current = 'game'
+                    text_color: 1,1,1,1
+                    background_normal:'kv files/2nd.png'
+                    background_down:'kv files/2bnd.png'
+                    font_size: dp(30)
+                    font_name:'thin'
+
+
+
+
+                Button:
+                    markup:True
+                    pos_hint:{'center_x': 0.5 , 'center_y': 0.7}
+                    text: "[i][b]Translator[/b][i]"
+                    font_name:'thin'
+                    size_hint:(1.0,0.2)
+                    on_release:app.root.current = 'trans'
+                    text_color: 1,1,1,1
+                    background_normal:'kv files/1st.png'
+                    background_down:'kv files/1bst.png'
+                    font_size: dp(30)
+
+
+                Button:
+                    markup:True
+                    pos_hint:{'center_x': 0.5, 'center_y': 0.3}
+                    text:"[b]Article Finder[/b]"
+                    size_hint:(1.0,0.2)
+                    on_release:app.root.current = 'gender'
+                    text_color: 1,1,1,1
+                    background_normal:'kv files/3rd.png'
+                    background_down:'kv files/3brd.png'
+                    font_size: dp(30)
+                    font_name:'thin'
+
+
+                Button:
+                    markup:True
+                    pos_hint:{'center_x': 0.5, 'center_y': 0.1}
+                    text:"[b]Learn[/b]"
+                    size_hint:(1.0,0.2)
+                    on_release:app.root.current = 'notes'
+                    text_color: 1,1,1,1
+                    background_normal:'kv files/4th.png'
+                    background_down:'kv files/4bth.png'
+                    font_size: dp(30)
+                    font_name:'thin'
+
+
+
+
+
+
+<GenderGameScreen>:
+    id: game
+    name:'game'
+    on_pre_enter:
+        root.show_score()
+        root.show_chances()
+        root.next_button_hider()
+        quiz_label.text = "What is the gender of" + " " + f"[b][color=de14a6ff]{self.build()}  [/color][/b]"
+        root.request_ad()
+    on_pre_leave:
+        show_label.text = " "
+        root.activate()
+        root.next_button_hider()
+
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 1)
+        Rectangle:
+            source:'kv files/game.png'
+            size: root.width, root.height
+            pos: self.pos
+
+
+    MDLabel:
+        id: quiz_label
+        text: "What is the gender of" + " " +  f"[b][color=#1ac94e] {root.build()}  [/color][/b]"
+        markup: True
+        pos_hint: {'center_x' : 0.55, 'center_y': 0.7}
+        font_size: 0.058 * root.height
+        bold:True
+        size_hint:(0.9,0.2)
+    MDRectangleFlatButton:
+        id:der
+        text: "Der"
+        text_color: 0,0,0,1
+        color:0,1,0,1
+        pos_hint:{"center_x": 0.2,"center_y": 0.4}
+        on_press: root.correcter_der()
+        size_hint:(.2,.1)
+        disabled:False
+        bold:True
+    MDRectangleFlatButton:
+        id:die
+        text: "Die"
+        text_color: 0,0,0,1
+        on_press: root.correcter_die()
+        size_hint:(.2,.1)
+        pos_hint:{"center_x": 0.5,"center_y": 0.4}
+        disabled:False
+        bold:True
+    MDRectangleFlatButton:
+        text: "Das"
+        id:das
+        text_color: 0,0,0,1
+        on_press: root.correcter_das()
+        size_hint:(.2,.1)
+        pos_hint:{"center_x": 0.8,"center_y": 0.4}
+        disabled:False
+        bold:True
+
+    MDRaisedButton:
+        id:next_button
+        text: 'next'
+        size_hint:(.3,.05)
+        pos_hint:{"center_x":.5,"center_y":0.12}
+        md_bg_color: 68/255,33/255,120/255,1
+        font_size:dp(15)
+        on_press:
+            root.show_res()
+            root.next_button_hider()
+
+    MDLabel:
+        id:show_label
+        bold:True
+        pos_hint:{"center_x": 0.85,"center_y": 0.23}
+        font_size: dp(30)
+
+
+    MDLabel:
+        id:point_system
+        pos_hint:{"center_x":.6,"center_y": .9}
+        bold:True
+        font_size:dp(20)
+
+    MDLabel:
+        id:chances
+        pos_hint:{"center_x":.99,"center_y": .9}
+        on_text:  if root.get_chances() == 0 : app.root.current = 'try'
+        font_size:dp(20)
+        bold:True
+
+    MDRaisedButton:
+        text: 'back'
+        pos_hint:{"center_x":0.85,"center_y": .05}
+        on_press: app.root.current = 'menu'
+
+
+
+
+
+
+
+<GenderScreen>:
+    on_pre_enter:
+        txt.text = ""
+        rv.data = []
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 1)
+        Rectangle:
+            source:'kv files/trans.png'
+            size: root.width, root.height
+            pos: self.pos
+    name:'gender'
+
+    RV:
+        id: rv
+    GenderText:
+        id:txt
+
+    MDRaisedButton:
+        text: 'back'
+        pos_hint:{"center_x":0.85,"center_y": .05}
+        on_press:
+            app.root.current = 'menu'
+
+
+
+
+
+<GenderText>:
+    hint_text: "Enter the German noun"
+
+    pos_hint : {"center_x" : 0.5, "center_y" : 0.9}
+    icon_right_color:app.theme_cls.primary_color
+    size_hint:(0.85,0.05)
+
+    color_active: 0, 0, 1, 1
+
+
+
+
+
+
+
+
+<TryAgainScreen>:
+    on_pre_enter: root.show_ad()
+
+    name:"try"
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 1)
+        Rectangle:
+            source:'kv files/tryback.png'
+            size: root.width, root.height
+            pos: self.pos
+
+    MDLabel:
+        id:try_label
+        text: "[b][u]Work Harder[/u][/b]"
+        font_size: dp(30)
+        pos_hint:{"center_x":.9,"center_y":.6}
+        markup:True
+    MDFillRoundFlatIconButton:
+        id:try_button
+        icon: 'emoticon-happy'
+        pos_hint:{"center_x":.5,"center_y":.4}
+        text: "Try Again"
+        on_press:
+            app.root.current = "game"
+        md_bg_color:0.5,0.4,0.99999993,1
+    MDRaisedButton:
+        text: 'back'
+        pos_hint:{"center_x":0.85,"center_y": .05}
+        on_press: app.root.current = 'menu'
+        md_bg_color:219/255,227/255,226/255,1
+        text_color:0,0,0,1
+
+
+
+
+
+
+
+
+<TranslatorScreen>:
+    name:'trans'
+    on_pre_enter:
+        self.ids.left_text.text = " "
+        self.ids.right_text.text = " "
+
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 1)
+        Rectangle:
+            source:'kv files/trans.png'
+            size: root.width, root.height
+            pos: self.pos
+    Label:
+        id:left_side_button
+        bold:True
+        text: 'German'
+        pos_hint:{'center_x' : 0.25,'center_y' : 0.8}
+        font_size:dp(30)
+        font_name:'trans'
+        color:0,0,0,1
+
+    MDIconButton:
+        id:switch_button
+        text_color:1,0,0,1
+
+        icon:'camera-switch'
+        pos_hint:{'center_x' : 0.5,'center_y' : 0.8}
+        on_press:
+            root.switch()
+
+    Label:
+        id:right_side_button
+        bold:True
+        text: 'English'
+        pos_hint:{'center_x' : 0.75,'center_y' : 0.8}
+        font_size:dp(30)
+        font_name:'trans'
+        color:0,0,0,1
+
+
+    MDTextField:
+        id: left_text
+        size_hint_x:0.85
+        pos_hint:{'center_x': .5,"center_y": .6}
+        font_name:'trans'
+        font_size:dp(22)
+        line_color_normal:0,0,0,1
+
+
+    MDTextFieldRect:
+        id: right_text
+        disabled:True
+        size_hint:(.8,.2)
+        font_size: dp(20)
+        bold:True
+        pos_hint:{'center_x': .5,"center_y": .4}
+        background_disabled_normal:'kv files/white_text.png'
+        disabled_color:0,0,0,1
+        font_name:'trans'
+
+    MDRectangleFlatButton:
+        id: translate_button
+
+        text: 'Translate'
+        pos_hint:{'center_x': .5,'center_y': .2}
+        text_color:0,0,0,1
+        on_press:
+            root.translate()
+            right_text.disabled = True
+
+    MDRaisedButton:
+        text: 'back'
+        pos_hint:{"center_x":0.85,"center_y": .05}
+        on_release:
+
+            app.root.current = 'menu'
+
+
+
+
+
+<RV>:
+
+
+
+    bar_width: 10
+    scroll_type:['bars','content']
+    effect_cls: "ScrollEffect"
+    viewclass: 'SelectableLabel'
+    pos_hint:{"center_x": 0.5 , 'center_y': 0.5}
+    size_hint:(0.8,.75)
+    SelectableRecycleBoxLayout:
+        default_size: None, dp(50)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+        multiselect: False
+
+<SelectableLabel>:
+    # Draw a background to indicate selection
+    color: 0,0,0,1
+    canvas.before:
+        Color:
+            rgba: (0, 0, 1, .5) if self.selected else (1, 1, 1, 1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+<NotesScreen>:
+    name:'notes'
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 1)
+        Rectangle:
+            source:'kv files/trans.png'
+            size: root.width, root.height
+            pos: self.pos
+    
+    Button:
+        text:'Personal Pronouns'
+        pos_hint:{'center_x': 0.5 , 'center_y':.8}
+        size_hint:(0.8,0.1)
+        font_size:'20dp'
+        background_normal:'notes/red.png'
+        background_down:'notes/redd.png'
+        on_release:
+            app.root.current = "personal"
+    Button:
+        text:'Verb Forms'
+        pos_hint:{'center_x': 0.5 , 'center_y':.6}
+        size_hint:(0.8,0.1)
+        font_size:'20dp'
+        background_normal:'notes/blue.png'
+        background_down:'notes/blued.png'
+        on_release:
+            app.root.current = "verb"
+    Button:
+        text:'Noun Articles'
+        pos_hint:{'center_x': 0.5 , 'center_y':.4}
+        size_hint:(0.8,0.1)
+        font_size:'20dp'
+        background_normal:'notes/yellow.png'
+        background_down:'notes/yellowd.png'
+        on_release:
+            app.root.current = "art"
+    Button:
+        text:'Preposition'
+        pos_hint:{'center_x': 0.5 , 'center_y':.2}
+        size_hint:(0.8,0.1)
+        font_size:'20dp'
+        background_normal:'notes/purple.png'
+        background_down:'notes/purpled.png'
+        on_release:
+            app.root.current = "prep"
+
+    MDRaisedButton:
+        text: 'back'
+        pos_hint:{"center_x":0.85,"center_y": .05}
+        on_release:
+
+            app.root.current = 'menu'
+
+<PersonalPronouns>:
+    name:'personal'
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 1)
+        Rectangle:
+            source:'kv files/perPro.png'
+            size: root.width, root.height
+            pos: self.pos
+
+
+    MDRaisedButton:
+        text: 'back'
+        size_hint:(0.15,.05)
+        pos_hint:{"center_x":0.85,"center_y": .05}
+        on_release:
+
+            app.root.current = 'notes'
+
+
+<VerbForms>:
+    name:'verb'
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 1)
+        Rectangle:
+            source:'kv files/veform.png'
+            size: root.width, root.height
+            pos: self.pos
+
+
+    MDRaisedButton:
+        text: 'back'
+        size_hint:(0.15,.05)
+        pos_hint:{"center_x":0.85,"center_y": .05}
+        on_release:
+
+            app.root.current = 'notes'
+<NounArticle>:
+    name:'art'
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 1)
+        Rectangle:
+            source:'kv files/noart.png'
+            size: root.width, root.height
+            pos: self.pos
+
+
+    MDRaisedButton:
+        text: 'back'
+        size_hint:(0.15,.05)
+        pos_hint:{"center_x":0.85,"center_y": .05}
+        on_release:
+
+            app.root.current = 'notes'
+<Preposition>:
+    name:'prep'
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 1)
+        Rectangle:
+            source:'kv files/prepp.png'
+            size: root.width, root.height
+            pos: self.pos
+
+
+    MDRaisedButton:
+        text: 'back'
+        size_hint:(0.15,.05)
+        pos_hint:{"center_x":0.85,"center_y": .05}
+        on_release:
+
+            app.root.current = 'notes'
